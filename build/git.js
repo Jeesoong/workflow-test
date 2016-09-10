@@ -11,9 +11,15 @@ const colors = require('colors')
 
 let currentBranch = 0
 
-console.log(process.argv[2])
+let command = process.argv[2]
 
-return
+switch (command) {
+    case 'newBranch':
+        newBranch()
+        break
+    default:
+        console.log(11)
+}
 
 
 function newBranch () {

@@ -12,7 +12,7 @@
     "e2e": "node test/e2e/runner.js",
     "jslint": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "newbranch": "node build/git.js -newBranch",
+    "newbranch": "node build/git.js newBranch",
     "push": "grunt push",
     "tag": "grunt tag",
     "pretest": "grunt test  && NODE_ENV=test node build/build.js",
