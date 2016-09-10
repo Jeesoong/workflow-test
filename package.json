@@ -14,7 +14,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
     "newbranch": "node build/git.js newBranch",
     "push": "grunt push",
-    "tag": "grunt tag",
+    "tag": "node build/git.js tag",
     "pretest": "grunt test  && NODE_ENV=test node build/build.js",
     "pub": "grunt pub  && NODE_ENV=production node build/build.js"
   },

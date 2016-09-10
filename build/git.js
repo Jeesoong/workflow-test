@@ -20,41 +20,49 @@ class gitWorkFlow {
     }
 
     init () {
+        this.initData()
         let command = process.argv[2]
-
         switch (command) {
             case 'newBranch':
                 this.newBranch()
+                break
+            case 'tag':
+                this.tag()
                 break
             default:
                 console.log(11)
         }
     }
 
+    initData () {
+        this.abcFile = path.join(__dirname, 'abc.json')
+        this.abcJSON = require(this.abcFile)
+        this.currentBranch = this.abcJSON.version || 'master'
+
+    }
+
     // 创建新的分支
     newBranch () {
         let me = this
         exec('git branch -a & git tag', function (err, stdout, stderr) {
-            var r = clamUtil.getBiggestVersion(stdout.match(/\d+\.\d+\.\d+/ig));
+            let r = clamUtil.getBiggestVersion(stdout.match(/\d+\.\d+\.\d+/ig))
             if (!r) {
-                r = '0.1.0';
+                r = '0.0.1'
             } else {
                 r = me.updateVersion(r)
             }
             console.log(colors.green('新分支：daily/' + r))
-            currentBranch = r
-            exec(`git checkout -b daily/${currentBranch}`, {async:true})
+            me.currentBranch = r
+            exec(`git checkout -b daily/${me.currentBranch}`, {async:true})
             // 回写入 abc.json 的 version
-            let abcFile = path.join(__dirname, 'abc.json')
-            let abcJSON = require(abcFile)
-            abcJSON.version = r
+            me.abcJSON.version = r
             try {
-                fs.writeFile(abcFile, JSON.stringify(abcJSON), (err) => {
+                fs.writeFile(me.abcFile, JSON.stringify(me.abcJSON), (err) => {
                     if (err) console.log(colors.red(err))
                     console.log(colors.green("update abc.json."))
                     me.add()
                     me.commit()
-                    me.push(currentBranch)
+                    me.push(me.currentBranch)
                 })
             } catch (e) {
                 console.log(colors.red('未找到abc.json'))
@@ -62,6 +70,17 @@ class gitWorkFlow {
 
 
         })
+    }
+    tag () {
+        this.add()
+        this.commit()
+        this.push(this.currentBranch)
+        exec(`git tag publish/${this.currentBranch}`)
+        this.publish()
+
+    }
+    publish () {
+        exec(`git push origin publish/${this.currentBranch}`)
     }
 
     add() {
