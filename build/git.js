@@ -11,6 +11,10 @@ const colors = require('colors')
 
 let currentBranch = 0
 
+console.log(process.argv[2])
+
+return
+
 
 function newBranch () {
     exec('git branch -a & git tag', function (err, stdout, stderr) {
